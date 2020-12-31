@@ -1,14 +1,34 @@
-let Counter = function (date, hMonth, year) {
-    this.date = date;
-    this.month = hMonth - 1;
-    this.year = year;
+let Counter = function () {
 
     // display countdown
-    this.display = function () {
-        let finalDate = new Date(this.year, this.month, this.date)
-        let instant = new Date();
-        let interval = finalDate - instant;
-        this.setEndTime(interval);
+    this.display = function (hourCount, minCount, secCount) {
+        let globalFrame = document.createElement('div');
+        let hourFrame = document.createElement('div');
+        let minFrame = document.createElement('div');
+        let secFrame = document.createElement('div');
+
+        setInterval(function (){
+            let instant = new Date();
+            hourCount = instant.getHours();
+            minCount = instant.getMinutes();
+            secCount = instant.getSeconds();
+
+            console.log(instant);
+
+            document.body.appendChild(globalFrame);
+            globalFrame.appendChild(hourFrame);
+            globalFrame.appendChild(minFrame);
+            globalFrame.appendChild(secFrame);
+
+            globalFrame.style.display = 'flex';
+            hourFrame.innerHTML = parseInt(hourCount/10);
+            hourFrame.innerHTML += hourCount - parseInt(hourCount/10) * 10 + ":";
+            minFrame.innerHTML = parseInt(minCount/10)
+            minFrame.innerHTML += minCount - (parseInt(minCount/10) * 10) + ":";
+            secFrame.innerHTML = parseInt(secCount/10)
+            secFrame.innerHTML += secCount - (parseInt(secCount/10) * 10);
+
+        }, 1000);
 
     }
 
@@ -40,10 +60,7 @@ let Counter = function (date, hMonth, year) {
         let sec = Math.floor((timeLeft - (days * 1000 * 60 * 60 * 24) - (hours * 1000 * 60 *60) - (min * 1000 * 60))/ 1000);
 
     }
-
 }
 
-let clock = new Counter(6, 1, 2021);
-clock.goButton();
-clock.button();
-clock.display();
+let newCount = new Counter();
+newCount.display(0,0,0);
