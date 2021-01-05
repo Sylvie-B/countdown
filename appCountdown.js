@@ -1,22 +1,22 @@
 let Counter = function () {
 
-    // form frame
+    // form
     let inputTime = document.createElement("div");
     inputTime.style.width = '250px';
+    inputTime.style.margin = 'auto';
     inputTime.style.display = 'flex';
-    inputTime.style.backgroundColor = '#bfefff';
 
-    let tHour = document.createElement('div');
-    tHour.innerHTML = 'heure';
+    let txHour = document.createElement('div');
+    txHour.innerHTML = 'heure';
     inputTime.appendChild(tHour);
     let formHour = document.createElement('input');
     formHour.style.width = '40px';
     formHour.type = 'number';
     formHour.value = '0';
     formHour.min = '0';
-    tHour.appendChild(formHour);
-    tHour.style.display = 'flex';
-    tHour.style.flexDirection = 'column';
+    txHour.appendChild(formHour);
+    txHour.style.display = 'flex';
+    txHour.style.flexDirection = 'column';
 
     let tMin = document.createElement('div');
     tMin.innerHTML = 'min';
@@ -48,12 +48,23 @@ let Counter = function () {
 
     // counter frame
     let globalFrame = document.createElement('div');
+    globalFrame.style.border = '1px solid red';
+    globalFrame.style.width = '20em';
     let txt = document.createElement('div');
     txt.innerHTML = 'compte à rebours';
     let countFrame = document.createElement('div');
     let hourFrame = document.createElement('div');
+    hourFrame.style.border = '1px black solid';
+    hourFrame.style.width = '42px';
+    hourFrame.style.height = '1.5em';
     let minFrame = document.createElement('div');
+    minFrame.style.border = '1px black solid';
+    minFrame.style.width = '42px';
+    minFrame.style.height = '1.5em';
     let secFrame = document.createElement('div');
+    secFrame.style.border = '1px black solid';
+    secFrame.style.width = '42px';
+    secFrame.style.height = '1.5em';
 
     // counter display
     globalFrame.appendChild(inputTime);
@@ -66,20 +77,19 @@ let Counter = function () {
 
     document.body.appendChild(globalFrame);
 
-
     button.addEventListener('click', function (){
         // time in milliseconds
         let nHour = formHour.value;
         let nMin = formMin.value;
         let nSec = formSec.value;
-        let timeLeft = parseInt(nSec) *1000 + parseInt(nMin) *1000 * 60 + parseInt(nHour) * 1000 * 3600;
+        let timeLeft = parseInt(nSec) *10 + parseInt(nMin) *10 * 60 + parseInt(nHour) * 10 * 3600;
         console.log(timeLeft);
-        setInterval(function (){
+        let counter = setInterval(function (){
 
-            let hourLeft = Math.floor(timeLeft / 3600);
-            let minLeft = Math.floor((timeLeft - hourLeft * 3600) / 60);
-            let secLeft = Math.floor(timeLeft - hourLeft * 3600 - minLeft * 60);
-            let dixSecLeft = Math.floor(timeLeft - hourLeft * 3600 - minLeft * 60 - secLeft)
+            let hourLeft = Math.floor(timeLeft / 3600 / 10);
+            let minLeft = Math.floor((timeLeft - hourLeft * 3600 * 10) / 60 / 1000);
+            let secLeft = Math.floor(timeLeft - hourLeft * 3600 * 10 - minLeft * 60 * 1000);
+            let dixSecLeft = Math.floor(timeLeft - hourLeft * 3600 * 10 - minLeft * 60 * 1000 - secLeft * 1000)
 
             hourFrame.innerHTML = Math.floor(hourLeft / 10).toString();
             hourFrame.innerHTML += hourLeft - Math.floor(hourLeft/10) * 10 + ":";
@@ -88,7 +98,15 @@ let Counter = function () {
             secFrame.innerHTML = Math.floor(secLeft/10).toString();
             secFrame.innerHTML += secLeft - (Math.floor(secLeft/10) * 10);
 
-            timeLeft --;
+            if (timeLeft > 0){
+                timeLeft --;
+            }
+            else {
+                let display = document.createElement('div');
+                display.innerHTML = 'Fin';
+                globalFrame.appendChild(display);
+                clearInterval(counter);
+            }
 
         }, 100);
     })
