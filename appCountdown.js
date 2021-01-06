@@ -1,25 +1,41 @@
-let Counter = function () {
+let Counter = function (countName, color) {
+    // countdown display
+    countName = document.createElement('div');
+    countName.style.display = 'inline\-block';
+    countName.style.backgroundColor = 'darkred';
+    countName.style.margin = '5px';
+    countName.style.padding = '5px';
+    countName.style.fontFamily = 'monospace';
+    countName.style.color = 'white';
+    document.body.appendChild(countName);
 
     // counter frame
-    let globalFrame = document.createElement('div');
-    globalFrame.style.border = '1px solid red';
-    globalFrame.style.width = '20em';
+    let counterFrame = document.createElement('div');
+    // counterFrame.style.border = '4px solid ' + color;
+    counterFrame.style.padding = '4px';
+    countName.appendChild(counterFrame);
+
     let txt = document.createElement('div');
-    txt.style.width = '250px';
-    txt.style.margin = 'auto';
-    txt.innerHTML = 'compte à rebours';
+    txt.style.textAlign = 'center';
+    txt.style.fontWeight = 'bold';
+    txt.style.fontSize = '1.3rem';
+    txt.innerHTML = 'Compte à rebours';
+    counterFrame.appendChild(txt);
 
     // form
     let inputTime = document.createElement("div");
-    inputTime.style.width = '250px';
+    inputTime.style.width = '80%';
     inputTime.style.margin = 'auto';
+    inputTime.style.padding = '4px';
     inputTime.style.display = 'flex';
+    inputTime.style.justifyContent = 'center';
 
     let txHour = document.createElement('div');
     txHour.innerHTML = 'heure';
     txHour.style.display = 'flex';
     txHour.style.flexDirection = 'column';
     inputTime.appendChild(txHour);
+
     let formHour = document.createElement('input');
     formHour.style.width = '40px';
     formHour.type = 'number';
@@ -27,12 +43,12 @@ let Counter = function () {
     formHour.min = '0';
     txHour.appendChild(formHour);
 
-
     let txMin = document.createElement('div');
     txMin.innerHTML = 'min';
     txMin.style.display = 'flex';
     txMin.style.flexDirection = 'column';
     inputTime.appendChild(txMin);
+
     let formMin = document.createElement('input');
     formMin.style.width = '40px';
     formMin.type = 'number';
@@ -45,6 +61,7 @@ let Counter = function () {
     txSec.style.display = 'flex';
     txSec.style.flexDirection = 'column';
     inputTime.appendChild(txSec);
+
     let formSec = document.createElement('input');
     formSec.style.width = '40px';
     formSec.type = 'number';
@@ -52,26 +69,50 @@ let Counter = function () {
     formSec.min = '0';
     txSec.appendChild(formSec);
 
-    let button = document.createElement('button');
-    button.innerHTML = 'valider';
-    button.style.margin = '5px 0 0 5px';
-    inputTime.appendChild(button);
+    // tenth of second
+    let tenth = document.createElement('div');
+    tenth.style.border = '1px dashed white';
+    tenth.style.padding = '0 2px';
+    tenth.innerHTML = '0';
+    tenth.style.textAlign = 'center';
+    tenth.style.alignSelf = 'flex-end';
+    inputTime.appendChild(tenth);
 
-        // counter display
-    globalFrame.appendChild(txt);
-    globalFrame.appendChild(inputTime);
+    counterFrame.appendChild(inputTime);
 
-    document.body.appendChild(globalFrame);
+    // start - end - reset
+    let control = document.createElement('div');
+    control.style.border = '4px solid ' + color;
+    control.style.padding = '4px';
+    control.style.display = 'flex';
+    control.style.justifyContent = 'center';
+    counterFrame.appendChild(control);
+
+    let pause = document.createElement('button');
+    pause.innerHTML = 'PAUSE';
+    pause.style.display = 'none';
+    control.appendChild(pause);
+
+    let start = document.createElement('button');
+    start.innerHTML = 'START';
+    control.appendChild(start);
+
+    let reset = document.createElement('button');
+    reset.innerHTML = 'RESET';
+    control.appendChild(reset);
 
     // start countdown
-    button.addEventListener('click', function (){
+    start.addEventListener('click', function (){
+        // start --> pause
+        start.style.display = 'none';
+        pause.style.display = 'block';
 
         // get input time
         let nHour = formHour.value;
         let nMin = formMin.value;
         let nSec = formSec.value;
 
-        // time in tenth of second
+        // calculate time in tenth of second
         let timeLeft = parseInt(nSec) * 10 + parseInt(nMin) * 10 * 60 + parseInt(nHour) * 10 * 3600;
         console.log(timeLeft)
 
@@ -88,27 +129,47 @@ let Counter = function () {
                 formHour.value = hourLeft.toString();
                 formMin.value = minLeft.toString();
                 formSec.value = secLeft.toString();
+                tenth.innerHTML = dixSecLeft.toString();
 
-
+                if(secLeft % 2 === 0){
+                    control.style.backgroundColor = color;
+                    control.style.borderColor = 'darkred';
+                }
+                else {
+                    control.style.backgroundColor = 'darkred';
+                    control.style.borderColor = color;
+                }
                 timeLeft --;
             }
             else {
-                let display = document.createElement('div');
-                display.innerHTML = 'Fin';
-                globalFrame.appendChild(display);
+                control.style.backgroundColor = 'darkred';
+                control.style.borderColor = color;
+                pause.style.display = 'none';
+                start.style.display = 'block';
                 clearInterval(countdown);
             }
         }, 100);
-    })
 
-    // reset button
-    this.razButton = function () {
-        let raz = document.createElement('button');
-        raz.innerHTML = 'reset';
-        globalFrame.appendChild(raz);
-        raz.addEventListener('click', function () {
+        //standby
+        pause.addEventListener('click', function () {
+            clearInterval(countdown);
+            start.style.display = 'block';
+            pause.style.display = 'none';
         })
-    }
+
+        // listen reset
+        reset.addEventListener('click', function (){
+            formHour.value = "0";
+            formMin.value = "0";
+            formSec.value = "0";
+            tenth.innerHTML = "0";
+            control.style.backgroundColor = 'darkred';
+            control.style.borderColor = color;
+            clearInterval(countdown);
+        })
+    })
 }
 
-let newCount = new Counter();
+let newCount = new Counter('count01', 'black');
+let count02 = new Counter('count02', 'red');
+let count03 = new Counter('count03', 'white');
