@@ -11,7 +11,6 @@ let Counter = function (countName, color) {
 
     // counter frame
     let counterFrame = document.createElement('div');
-    // counterFrame.style.border = '4px solid ' + color;
     counterFrame.style.padding = '4px';
     countName.appendChild(counterFrame);
 
@@ -108,13 +107,12 @@ let Counter = function (countName, color) {
         pause.style.display = 'block';
 
         // get input time
-        let nHour = formHour.value;
-        let nMin = formMin.value;
-        let nSec = formSec.value;
+        let nHour = Math.abs(parseInt(formHour.value));
+        let nMin = Math.abs(parseInt(formMin.value));
+        let nSec = Math.abs(parseInt(formSec.value));
 
         // calculate time in tenth of second
         let timeLeft = parseInt(nSec) * 10 + parseInt(nMin) * 10 * 60 + parseInt(nHour) * 10 * 3600;
-        console.log(timeLeft)
 
         // countdown
         let countdown = setInterval(function (){
@@ -133,17 +131,14 @@ let Counter = function (countName, color) {
 
                 if(secLeft % 2 === 0){
                     control.style.backgroundColor = color;
-                    control.style.borderColor = 'darkred';
                 }
                 else {
                     control.style.backgroundColor = 'darkred';
-                    control.style.borderColor = color;
                 }
                 timeLeft --;
             }
             else {
                 control.style.backgroundColor = 'darkred';
-                control.style.borderColor = color;
                 pause.style.display = 'none';
                 start.style.display = 'block';
                 clearInterval(countdown);
@@ -164,7 +159,6 @@ let Counter = function (countName, color) {
             formSec.value = "0";
             tenth.innerHTML = "0";
             control.style.backgroundColor = 'darkred';
-            control.style.borderColor = color;
             clearInterval(countdown);
         })
     })
